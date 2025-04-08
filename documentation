@@ -1,0 +1,51 @@
+To clone the repository, use the following command:
+
+git clone https://github.com/your-repo-url.git
+cd your-repo-directory
+
+Create a virtual environment:
+python -m venv env
+
+Activate the virtual environment:
+.\env\Scripts\activate
+
+Install the required dependencies:
+pip install -r requirements.txt
+
+Configure the Database and Environment Variables
+DATABASE_URL=postgresql+asyncpg://user:password@localhost/dbname
+AWS_ACCESS_KEY_ID=your_aws_access_key
+AWS_SECRET_ACCESS_KEY=your_aws_secret_key
+LLAMA3_MODEL_PATH=/path/to/llama3/model
+
+ Run the Application Locally
+uvicorn main:app --reload
+
+Deploy the Application on AWS:
+Launch an EC2 instance
+ssh -i "your-key-pair.pem" ubuntu@ec2-your-instance-public-ip.compute-1.amazonaws.com
+
+Connect to the EC2 instance
+sudo apt update
+sudo apt install python3-pip python3-venv
+
+Clone your repository on the EC2 instance
+git clone https://github.com/your-repo-url.git
+cd your-repo-directory
+
+Set up the virtual environment and install dependencies:
+python3 -m venv env
+source env/bin/activate
+pip install -r requirements.txt
+
+Run the FastAPI application
+uvicorn main:app --host 0.0.0.0 --port 8000
+Install Nginx:
+sudo apt install nginx
+
+Set up HTTPS:
+sudo apt install certbot python3-certbot-nginx
+sudo certbot --nginx
+
+Implement authentication for the API:
+Use OAuth2 or JWT to secure your API endpoints.
