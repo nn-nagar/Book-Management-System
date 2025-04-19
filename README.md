@@ -65,6 +65,71 @@ Open [http://localhost:8000/docs](http://localhost:8000/docs) to explore API end
 | POST | /books/{id}/reviews | Add a user review |
 | GET | /books/{id}/reviews/summary | Get summarized book reviews |
 
+
+## 🔐 **User Authentication & Token Management – Code Overview**
+
+### 📌 **Purpose:**
+This code implements **secure user authentication** using **OAuth2 with JWT (JSON Web Tokens)**. It allows users to log in with credentials, receive a token, and access protected routes based on their identity.
+
+---
+
+### 📍 **Authentication Flow - Explained in Steps**
+
+1. ### **`authenticate_user()`**
+   - **Purpose:** Validates if the provided username and password match a user in the database.
+   - **Logic:**
+     - Fetches the user by username using `get_user()`.
+     - Verifies the provided password against the stored hashed password using `verify_password()`.
+     - Returns the user object if valid, otherwise returns `False`.
+
+2. ### **`create_access_token()`**
+   - **Purpose:** Generates a JWT access token that encodes user data with an expiration.
+   - **Logic:**
+     - Takes user data (usually the username).
+     - Adds an expiration timestamp (default: 15 minutes if not provided).
+     - Encodes the token using a secret key and specified algorithm.
+
+3. ### **`get_current_user()`**
+   - **Purpose:** A dependency function used to protect routes and fetch the current authenticated user from the token.
+   - **Logic:**
+     - Decodes the token using the secret key.
+     - Extracts the username from the token payload.
+     - Validates the existence of the user.
+     - Raises an exception if the token is invalid or the user doesn’t exist.
+
+---
+
+### 🧪 **Token-Based Authentication Endpoint**
+
+4. ### **`@app.post("/token")`**
+   - **Purpose:** Login endpoint that validates user credentials and issues a JWT token.
+   - **Logic:**
+     - Accepts login form data (username and password).
+     - Calls `authenticate_user()` to verify credentials.
+     - If valid, generates an access token with `create_access_token()`.
+     - Returns the token to the client with `"token_type": "bearer"`.
+
+---
+
+### 🔒 **Protected Endpoint**
+
+5. ### **`@app.get("/users/me")`**
+   - **Purpose:** A protected route that returns the authenticated user's profile data.
+   - **Logic:**
+     - Uses `Depends(get_current_user)` to extract and verify the user from the token.
+     - Returns the authenticated user object.
+
+---
+
+### ✅ **Summary - What This Code Does**
+- Implements **user login and session handling** using JWT.
+- Ensures **password security** via hashing (not shown but implied with `verify_password`).
+- Protects routes using FastAPI's dependency injection (`Depends()`).
+- Issues **short-lived tokens** to reduce security risk.
+- Uses **OAuth2 password grant flow**, commonly used in APIs.
+
+---
+
 ## Deployment
 ### Docker
 To run the system in a Docker container:
